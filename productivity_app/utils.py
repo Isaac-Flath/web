@@ -46,7 +46,7 @@ links = (Li(A('Home',href='/')),
 def layout(content, req):
     return Div(
         NavBar(links, H1("Isaac's Website", cls="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-green-500 to-indigo-400")),
-        Container(content, cls=ContainerT.sm),
+        Container(content, cls=ContainerT.lg),
         footer)
 
 # %% ../nbs/utils.ipynb 12

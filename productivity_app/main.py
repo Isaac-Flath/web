@@ -15,12 +15,15 @@ from functools import partial
 try:
     from productivity_app.social_media import ar as ar_social
     from productivity_app.todo import ar as ar_todo
+    from productivity_app.blog import ar as ar_blog
     from productivity_app.utils import *
 except Exception as e:
     raise e
 
 # %% ../nbs/main.ipynb 4
-app, rt = fast_app(hdrs = Theme.blue.headers(), body_wrap=layout, live=True)
+app, rt = fast_app(hdrs = Theme.blue.headers(highlightjs=True), 
+                   routes = (Mount('/blog/static', StaticFiles(directory='posts/static')),),
+                   body_wrap=layout, live=True)
 
 # %% ../nbs/main.ipynb 5
 @rt
@@ -33,11 +36,11 @@ def index():
 @rt
 def index():
     _href = partial(A, cls=AT.primary, target='_blank')
-    def _project_slider_card(title, subtitle, href=None):
+    def _project_slider_card(title, subtitle, href=None,cls=''):
         return Card(
                 A(H3(title), href=href, cls=AT.primary if href else '', target='_blank', disabled=href is None), 
                 Subtitle(subtitle), 
-                cls='w-96')
+                cls=cls)
     def _section(*c):
         return Section(Article(*c, cls='prose max-w-5xl mx-auto space-y-5 pt-16'), cls=('uk-padding-remove-vertical',))
     
@@ -70,8 +73,10 @@ def index():
                                          "A tech powered law firm.",
                                          'https://tryvirgil.com/'),
                     _project_slider_card("Plash", 
-                                         "No information here!  How mysterious..."),
-                    uk_slider='finite: true'
+                                         "No information here!  How mysterious...",
+                                        None),
+                    uk_slider='finite: true',
+                    items_cls='uk-child-width-1-3 ml-1 mr-20 gap-4'
                 )),
     _section(
         DivCentered(H3(U("My Hobbies"))),
@@ -100,6 +105,7 @@ def theme():
 # %% ../nbs/main.ipynb 8
 ar_social.to_app(app)
 ar_todo.to_app(app)
+ar_blog.to_app(app)
 
 # %% ../nbs/main.ipynb 9
 redir_path = '/redirect'
