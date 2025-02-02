@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "productivity_app"
+  site-url: "https://Isaac-Flath.github.io/productivity_app"
+  description: "My personal productivity website for todo apps and any other apps I find useful to build"
+  repo-branch: main
+  repo-url: "https://github.com/Isaac-Flath/productivity_app"
