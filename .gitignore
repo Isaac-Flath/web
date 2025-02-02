@@ -1,3 +1,8 @@
+productivity_app.db*
+nbs/productivity_app.db-shm
+.sesskey
+nbs/.last_checked
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

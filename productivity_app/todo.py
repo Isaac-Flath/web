@@ -64,8 +64,12 @@ def update_status(id:str, new_status:str):
 @ar
 def index(request=None):
     if request and 'hx-request' not in request.headers:
-        last_update = datetime.strptime(db.execute('select max(updated_at) from todo').fetchone()[0], '%Y-%m-%dT%H:%M:%SZ').date()
-        populate_todos((datetime.today().date() - last_update).days + 1)
+        last_update = db.execute('select max(updated_at) from todo').fetchone()[0]
+        if last_update:
+            last_update = datetime.strptime(last_update, '%Y-%m-%dT%H:%M:%SZ').date()
+            populate_todos((datetime.today().date() - last_update).days + 1)
+        else:
+            populate_todos(30)
     
     cutoff = (datetime.now() - timedelta(days=180)).strftime('%Y-%m-%dT%H:%M:%SZ')
     base_query = f'updated_at>=?'
