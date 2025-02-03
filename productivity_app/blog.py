@@ -59,7 +59,7 @@ def render_code_output(cell, lang='python', pygments=False, wrapper=Footer):
         elif otype in ('display_data','execute_result'):
             data = out['data']
             _g = lambda t: ''.join(data[t]) if t in data else None
-            if d := _g('text/html'): return Safe(d)
+            if d := _g('text/html'): return Safe(apply_classes(d))
             if d := _g('application/javascript'): return Safe(f'<script>{d}</script>')
             if d := _g('text/markdown'): return render_md(d)
             if d := _g('text/latex'): return Safe(f'<div class="math">${d}$</div>')
