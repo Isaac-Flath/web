@@ -13,7 +13,7 @@ from monsterui.all import *
 import ast, os
 from ghapi.all import GhApi
 from datetime import datetime, timedelta
-from .utils import *
+from productivity_app.utils import *
 api = GhApi(token=os.environ['GITHUB_TOKEN'])
 
 # %% ../nbs/todo.ipynb 3

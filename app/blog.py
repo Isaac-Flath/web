@@ -9,7 +9,7 @@ __all__ = ['ar', 'path', 'get_notebooks', 'get_meta', 'get_nb_lang', 'render_cod
 # %% ../nbs/Blog.ipynb 2
 from fasthtml.common import *
 from monsterui.all import *
-from .utils import *
+from productivity_app.utils import *
 from pathlib import Path
 import glob
 from fastcore.ansi import ansi2html
