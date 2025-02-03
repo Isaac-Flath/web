@@ -1,5 +1,7 @@
+ghapi
 fastcore
 python-fasthtml
 monsterui
 nbdev
 execnb
+fractionalindex

@@ -15,7 +15,7 @@ from random import randint
 from fastlite.core import *
 from base64 import b64encode
 from fractionalindex.fractionalindex import SqliteIndex
-from productivity_app.utils import *
+from utils import *
 
 # %% ../nbs/social_media.ipynb 6
 ar = APIRouter(prefix='/social_media', body_wrap=layout)

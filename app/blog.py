@@ -9,7 +9,7 @@ __all__ = ['ar', 'path', 'get_notebooks', 'get_meta', 'get_nb_lang', 'render_cod
 # %% ../nbs/Blog.ipynb 2
 from fasthtml.common import *
 from monsterui.all import *
-from productivity_app.utils import *
+from utils import *
 from pathlib import Path
 import glob
 from fastcore.ansi import ansi2html
@@ -72,11 +72,13 @@ def render_code_output(cell, lang='python', pygments=False, wrapper=Footer):
     res = Div(*map(render_output, cell.outputs))
     if res: return wrapper(res)
 
-# %% ../nbs/Blog.ipynb 10
+# %% ../nbs/Blog.ipynb 11
 def render_nb(nb):
     "Render a notebook as a list of html elements"
     res = []
     lang = get_nb_lang(nb)
+    meta = get_meta(nb)
+    res.append(Div(H1(meta['title']), Subtitle(meta['description']), cls='my-9'))
     for cell in nb.cells[1:]:  # Skip first cell which contains metadata
         if cell['cell_type']=='code':
             _output = render_code_output(cell)
@@ -102,11 +104,11 @@ def index():
         Div(Grid(*map(blog_card, metas), cols=1),
             cls="max-w-4xl mx-auto px-4"))
 
-# %% ../nbs/Blog.ipynb 14
+# %% ../nbs/Blog.ipynb 15
 @ar
 def blog_post(fpath:str): return render_nb(read_nb(fpath))
 
-# %% ../nbs/Blog.ipynb 15
+# %% ../nbs/Blog.ipynb 16
 def blog_card(meta):
     def Tags(cats): return DivLAligned(map(Label, cats))
     

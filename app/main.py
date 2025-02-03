@@ -12,13 +12,10 @@ from fasthtml.oauth import *
 from functools import partial
 
 # %% ../nbs/main.ipynb 3
-try:
-    from productivity_app.social_media import ar as ar_social
-    from productivity_app.todo import ar as ar_todo
-    from productivity_app.blog import ar as ar_blog
-    from productivity_app.utils import *
-except Exception as e:
-    raise e
+from social_media import ar as ar_social
+from todo import ar as ar_todo
+from blog import ar as ar_blog
+from utils import *
 
 # %% ../nbs/main.ipynb 4
 app, rt = fast_app(hdrs = Theme.blue.headers(highlightjs=True), 
@@ -109,7 +106,8 @@ ar_blog.to_app(app)
 
 # %% ../nbs/main.ipynb 9
 redir_path = '/redirect'
-skip = ('/login', '/', redir_path, r'/.*\.(png|jpg|ico|css|js)', )
+skip = ('/login', '/blog', '/blog/', r'/blog/.*', '/', 
+        redir_path, r'/.*\.(png|jpg|ico|css|js)', )
 
 class Auth(OAuth):
     def get_auth(self, info, ident, session, state):
@@ -133,5 +131,5 @@ def logout(sess):
     del sess["user_name"]
     return oauth.logout(sess)
 
-# %% ../nbs/main.ipynb 10
+# %% ../nbs/main.ipynb 12
 serve(port=5005)
