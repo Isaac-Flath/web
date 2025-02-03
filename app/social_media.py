@@ -8,7 +8,7 @@ __all__ = ['ar', 'idx', 'emojis', 'FooterIcon', 'PostControls', 'PostTextArea', 
            'save_post_image', 'rm_image', 'TwitterPost', 'rm_thread', 'load_thread', 'mk_thread', 'mk_thread_list',
            'index']
 
-# %% ../nbs/social_media.ipynb 3
+# %% ../nbs/social_media.ipynb
 from fasthtml.common import *
 from monsterui.all import *
 from random import randint
@@ -17,19 +17,19 @@ from base64 import b64encode
 from fractionalindex.fractionalindex import SqliteIndex
 from utils import *
 
-# %% ../nbs/social_media.ipynb 6
+# %% ../nbs/social_media.ipynb
 ar = APIRouter(prefix='/social_media', body_wrap=layout)
 
-# %% ../nbs/social_media.ipynb 7
+# %% ../nbs/social_media.ipynb
 # This is from Alexis' fractional indexing which will help us manipulate ordering of cells
 idx = SqliteIndex(db.conn,'posts', col='position')
 
-# %% ../nbs/social_media.ipynb 8
+# %% ../nbs/social_media.ipynb
 def FooterIcon(icon, value=None):
     "Icons that look like twitter UI but do absolutely nothing"
     return Button(UkIcon(icon), Span(value) if value else None, cls=ButtonT.ghost) 
 
-# %% ../nbs/social_media.ipynb 9
+# %% ../nbs/social_media.ipynb
 def PostControls(pid, tid):
     "Buttons that allow users to make actions, such as add/remove images, or reorder posts"
     return DivFullySpaced(
@@ -42,7 +42,7 @@ def PostControls(pid, tid):
         Button(UkIcon("move-up"),   hx_trigger='click', hx_target='#post-list', hx_get=mv_post_up.to(pid=pid,tid=tid)),
         Button(UkIcon("move-down"), hx_trigger='click', hx_target='#post-list', hx_get=mv_post_down.to(pid=pid, tid=tid)))
 
-# %% ../nbs/social_media.ipynb 10
+# %% ../nbs/social_media.ipynb
 @ar
 def PostTextArea(txt:str, pid:str, tid:str):
     "The actual text content is editable here, and includes a counter for how many chars it has."
@@ -66,7 +66,7 @@ def PostTextArea(txt:str, pid:str, tid:str):
             cls=f"text-sm {'text-red-500' if len(txt)>280 else 'text-gray-500'} text-right mt-1"),
         id=f'content-container-{pid}')
 
-# %% ../nbs/social_media.ipynb 11
+# %% ../nbs/social_media.ipynb
 @ar
 def mv_post_down(pid:str, tid:str, sess): 
     "Use Fractional Indexing to move post down in the thread"
@@ -83,7 +83,7 @@ def mv_post_up(pid:str, tid:str, sess):
     
     return load_thread(tid, sess['user_name'])
 
-# %% ../nbs/social_media.ipynb 12
+# %% ../nbs/social_media.ipynb
 def autosize_textarea():
     return Script("""
     document.querySelectorAll('textarea').forEach(textarea => {
@@ -93,7 +93,7 @@ def autosize_textarea():
             e.target.style.height = 'auto';
             e.target.style.height = e.target.scrollHeight + 'px';});});""")
 
-# %% ../nbs/social_media.ipynb 13
+# %% ../nbs/social_media.ipynb
 emojis = [
     "😀", "😃", "😄", "😁", "😅", "😂", "🤣", "😊", "😇", "🙂", "🙃", "😉", "😌", "😍", "🥰", 
     "😘", "😗", "😙", "😚", "😋", "😛", "😝", "😜", "🤪", "🤨", "🧐", "🤓", "😎", "🤩", "🥳",
@@ -108,13 +108,13 @@ def EmojiButton(pid, tid, emoji):
         hx_vals=f'''js:{{pid: '{pid}', tid: '{tid}', emoji: '{emoji}', content: document.querySelector('#content-{pid}').value}}''',
         hx_target=f'#content-container-{pid}', hx_swap='outerHTML', uk_toggle=f'#emoji_picker-{pid}')
 
-# %% ../nbs/social_media.ipynb 14
+# %% ../nbs/social_media.ipynb
 def EmojiPicker(pid, tid):
     "A grid of emoji buttons users can select from"
     return Card(
         Grid(*(EmojiButton(pid, tid, emoji) for emoji in emojis), cls='', cols=10),cls='w-fit z-50 uk-background-muted')
 
-# %% ../nbs/social_media.ipynb 15
+# %% ../nbs/social_media.ipynb
 @ar 
 def insert_emoji(pid:str, tid:str, emoji:str, content:str):
     "Appends an emoji to content and returns an updated PostTextArea"
@@ -122,7 +122,7 @@ def insert_emoji(pid:str, tid:str, emoji:str, content:str):
     save_post_content(pid, tid, new_content)
     return PostTextArea(new_content, pid, tid)
 
-# %% ../nbs/social_media.ipynb 16
+# %% ../nbs/social_media.ipynb
 def UploadZone(pid, tid, icon="upload", text="Drag files here or click to upload"):
     """Creates a styled upload zone modal for users to drag/drop images into using MonsterUI modal"""
     return Modal(DivCentered(
@@ -149,7 +149,7 @@ async def upload_image(pid:str, tid:str, image:UploadFile):
     save_post_image(pid, tid, f"/{filename}")
     return Img(src=f"/{filename}", cls="rounded-lg max-w-[512px] mt-4"), UploadZone(pid, tid) 
 
-# %% ../nbs/social_media.ipynb 17
+# %% ../nbs/social_media.ipynb
 @ar
 def save_post_content(pid:str, tid:str, content:str): 
     if pid in post_tbl: post_tbl.upsert(Post(id=pid, tid=tid, content=content))
@@ -159,7 +159,7 @@ def save_post_image(pid:str, tid:str, img_path:str):  post_tbl.upsert(Post(id=pi
 @ar.delete
 def rm_image(pid:str):post_tbl.upsert(Post(id=pid, img_path=None))
 
-# %% ../nbs/social_media.ipynb 18
+# %% ../nbs/social_media.ipynb
 @ar
 def TwitterPost(tid:str, pid=None, txt='', img=None, username="User", handle="@user", time="Just now"):
     "Creates the UI look for a Twitter Post"
@@ -178,7 +178,7 @@ def TwitterPost(tid:str, pid=None, txt='', img=None, username="User", handle="@u
                 cls=TextT.muted),
             cls='shadow-none'),PostControls(pid,tid))
 
-# %% ../nbs/social_media.ipynb 19
+# %% ../nbs/social_media.ipynb
 @ar.delete
 def rm_thread(tid:str, sess):
     "Deletes a thread and all it's posts"
@@ -189,7 +189,7 @@ def rm_thread(tid:str, sess):
     post_tbl.delete_where('tid=?', (tid,))
     return Div(id='post-list', cls='space-y-5'), mk_thread_list(sess['user_name'])
 
-# %% ../nbs/social_media.ipynb 20
+# %% ../nbs/social_media.ipynb
 @ar
 def load_thread(tid:str, user_name:str):
     "Loads a thread from DB with header with title/delete, a list of `TwitterPost`s, and the thread list selector"
@@ -207,7 +207,7 @@ def load_thread(tid:str, user_name:str):
         time=p['created_at']
     ) for p in posts), id='post-list', cls='space-y-5 max-w-[598px]'), mk_thread_list(user_name, tid)
 
-# %% ../nbs/social_media.ipynb 21
+# %% ../nbs/social_media.ipynb
 @ar
 def mk_thread(sess, thread_name:str):
     "Create a new twitter thread in db, load it into UI, then update the thread list in UI"
@@ -216,14 +216,14 @@ def mk_thread(sess, thread_name:str):
     thread_tbl.upsert(Thread(id=tid, name=thread_name, user=sess['user_name']))
     return Div(load_thread(tid, sess['user_name'])),mk_thread_list(sess['user_name'], tid)
 
-# %% ../nbs/social_media.ipynb 22
+# %% ../nbs/social_media.ipynb
 def mk_thread_list(user_name, tid=None):
     "Creates UI for a list of all threads in the db for the given user"
     threads = list(thread_tbl.rows_where('user=?', (user_name,)))
     threadlist = [Li(A(thread['name']), hx_get=load_thread.to(tid=thread['id'], user_name=user_name), hx_target='#post-list', cls='uk-active' if tid==thread['id'] else '') for thread in threads]
     return NavContainer(id='thread-list', hx_swap_oob='true', cls=(NavT.primary,'h-full'))(*threadlist)
 
-# %% ../nbs/social_media.ipynb 23
+# %% ../nbs/social_media.ipynb
 @ar
 def index(sess):
     return Title("PostHaste"), Container(H3("Make your Twitter thread post haste!", cls='mb-10'),

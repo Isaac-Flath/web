@@ -5,7 +5,7 @@
 # %% auto 0
 __all__ = ['api', 'ar', 'populate_todos', 'TodoCard', 'update_status', 'index']
 
-# %% ../nbs/todo.ipynb 2
+# %% ../nbs/todo.ipynb
 from fasthtml.common import *
 from functools import partial
 from fasthtml.jupyter import *
@@ -16,10 +16,10 @@ from datetime import datetime, timedelta
 from utils import *
 api = GhApi(token=os.environ['GITHUB_TOKEN'])
 
-# %% ../nbs/todo.ipynb 3
+# %% ../nbs/todo.ipynb
 ar = APIRouter(prefix='/todo', body_wrap=layout)
 
-# %% ../nbs/todo.ipynb 4
+# %% ../nbs/todo.ipynb
 def populate_todos(n_days=30):
     me = api.users.get_authenticated()
     username = me.login
@@ -44,7 +44,7 @@ def populate_todos(n_days=30):
             if item['id'] in db.todos: db.todos.update(issue)
             else: db.todos.insert(issue)
 
-# %% ../nbs/todo.ipynb 5
+# %% ../nbs/todo.ipynb
 def TodoCard(issue:Todo):  
     return Card(
         A(issue.title, href=issue.html_url, cls=AT.primary, target='_blank'),
@@ -54,13 +54,13 @@ def TodoCard(issue:Todo):
         DivLAligned(*map(Label, [o for o in issue.labels.split(',') if o != ''])),
     footer=Grid(*[Button(s, hx_post=update_status.to(id=issue.id, new_status=s), hx_target='body') for s in status_opts], cols_max=3))
 
-# %% ../nbs/todo.ipynb 6
+# %% ../nbs/todo.ipynb
 @ar    
 def update_status(id:str, new_status:str): 
     db.todos.upsert(Todo(id=id, status=new_status))
     return index()
 
-# %% ../nbs/todo.ipynb 8
+# %% ../nbs/todo.ipynb
 @ar
 def index(request=None):
     if request and 'hx-request' not in request.headers:

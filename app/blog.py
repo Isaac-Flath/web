@@ -6,7 +6,7 @@
 __all__ = ['ar', 'path', 'get_notebooks', 'get_meta', 'get_nb_lang', 'render_code_output', 'render_nb', 'index', 'blog_post',
            'blog_card']
 
-# %% ../nbs/Blog.ipynb 2
+# %% ../nbs/Blog.ipynb
 from fasthtml.common import *
 from monsterui.all import *
 from utils import *
@@ -18,14 +18,14 @@ import yaml
 from execnb.nbio import read_nb
 from execnb.shell import render_outputs
 
-# %% ../nbs/Blog.ipynb 3
+# %% ../nbs/Blog.ipynb
 ar = APIRouter(prefix="/blog", body_wrap=layout)
 
-# %% ../nbs/Blog.ipynb 4
+# %% ../nbs/Blog.ipynb
 path = Path()
 if IN_NOTEBOOK: path = Path('../')
 
-# %% ../nbs/Blog.ipynb 5
+# %% ../nbs/Blog.ipynb
 def get_notebooks():
     notebooks = []
     for nb in (path/'posts').rglob('*.ipynb'):
@@ -33,19 +33,21 @@ def get_notebooks():
             notebooks.append(str(nb))
     return notebooks
 
-# %% ../nbs/Blog.ipynb 6
+# %% ../nbs/Blog.ipynb
 def get_meta(nb): return yaml.safe_load(nb.cells[0].source.split('---')[1])
 
-# %% ../nbs/Blog.ipynb 7
-def get_nb_lang(nb): return nb['metadata']['kernelspec']['language']
+# %% ../nbs/Blog.ipynb
+def get_nb_lang(nb): 
+    try: return nb['metadata']['kernelspec']['language']
+    except Exception as e: return 'python'
 
-# %% ../nbs/Blog.ipynb 8
+# %% ../nbs/Blog.ipynb
 from IPython.utils.text import strip_ansi
 from html import escape
 def _pre(s, xtra=''): return f"<pre {xtra}><code>{escape(s)}</code></pre>"
 def _strip(s): return strip_ansi(escape(s))
 
-# %% ../nbs/Blog.ipynb 9
+# %% ../nbs/Blog.ipynb
 def render_code_output(cell, lang='python', pygments=False, wrapper=Footer):
     if not cell.outputs: return ''
     
@@ -72,7 +74,7 @@ def render_code_output(cell, lang='python', pygments=False, wrapper=Footer):
     res = Div(*map(render_output, cell.outputs))
     if res: return wrapper(res)
 
-# %% ../nbs/Blog.ipynb 11
+# %% ../nbs/Blog.ipynb
 def render_nb(nb):
     "Render a notebook as a list of html elements"
     res = []
@@ -88,7 +90,7 @@ def render_nb(nb):
             res.append(render_md(cell.source))
     return res
 
-# %% ../nbs/Blog.ipynb 13
+# %% ../nbs/Blog.ipynb
 @ar
 def index(): 
     metas = []
@@ -104,11 +106,11 @@ def index():
         Div(Grid(*map(blog_card, metas), cols=1),
             cls="max-w-4xl mx-auto px-4"))
 
-# %% ../nbs/Blog.ipynb 15
+# %% ../nbs/Blog.ipynb
 @ar
 def blog_post(fpath:str): return render_nb(read_nb(fpath))
 
-# %% ../nbs/Blog.ipynb 16
+# %% ../nbs/Blog.ipynb
 def blog_card(meta):
     def Tags(cats): return DivLAligned(map(Label, cats))
     

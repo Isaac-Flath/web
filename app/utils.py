@@ -5,16 +5,16 @@
 # %% auto 0
 __all__ = ['db', 'footer', 'links', 'post_tbl', 'thread_tbl', 'status_opts', 'layout', 'Post', 'Thread', 'Todo']
 
-# %% ../nbs/utils.ipynb 2
+# %% ../nbs/utils.ipynb
 from fasthtml.common import *
 from monsterui.all import *
 from fasthtml.components import Uk_theme_switcher
 
 
-# %% ../nbs/utils.ipynb 3
+# %% ../nbs/utils.ipynb
 db = Database('productivity_app.db')
 
-# %% ../nbs/utils.ipynb 5
+# %% ../nbs/utils.ipynb
 footer = Section(
         DivCentered(
             H2("Get in Touch", cls=(TextT.center, TextT.lg, TextT.bold)),
@@ -34,22 +34,22 @@ footer = Section(
             cls='space-y-4'),
         cls=(SectionT.muted, 'py-12 mt-12')),
 
-# %% ../nbs/utils.ipynb 8
+# %% ../nbs/utils.ipynb
 links = (Li(A('Home',href='/')),
          Li(A("Theme")),DropDownNavContainer(Div(Uk_theme_switcher(), cls='p-6 uk-drop-close'), cls='w-96'),
          Li(A('Blog', href='/blog')),
-         Li(A('TIL', href='/til')),
+#          Li(A('TIL', href='/til')),
          Li(A('Social', href='/social_media')),
          Li(A('Todo', href='/todo')))
 
-# %% ../nbs/utils.ipynb 10
+# %% ../nbs/utils.ipynb
 def layout(content, req):
     return Div(
         NavBar(links, H1("Isaac's Website", cls="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-green-500 to-indigo-400")),
         Container(content, cls=ContainerT.lg),
         footer)
 
-# %% ../nbs/utils.ipynb 12
+# %% ../nbs/utils.ipynb
 @dataclass
 class Post:
     id: str # Post Id (pid) is PK
@@ -63,7 +63,7 @@ class Post:
     modified_at: str = None # TODO: add mofified timestampe
         
 
-# %% ../nbs/utils.ipynb 13
+# %% ../nbs/utils.ipynb
 @dataclass
 class Thread:
     id: str # tid
@@ -71,18 +71,18 @@ class Thread:
     user: str # user this is for, used for filtering down what is shown in UI
     created_on: str=None # TODO: Add created date for UI selection/sorting
 
-# %% ../nbs/utils.ipynb 14
+# %% ../nbs/utils.ipynb
 post_tbl = db.create(Post, 'posts')
 thread_tbl = db.create(Thread, 'threads')
 
-# %% ../nbs/utils.ipynb 16
+# %% ../nbs/utils.ipynb
 status_opts = ("Todo", "In Progress", "Done", "Archived", "Someday", "Other")
 
-# %% ../nbs/utils.ipynb 17
+# %% ../nbs/utils.ipynb
 class Todo:
     title: str; id: int; updated_at: str; labels: str; repo_url: str; 
     html_url: str; repo_owner: str; repo_name: str; number: int;
     status: str 
 
-# %% ../nbs/utils.ipynb 18
+# %% ../nbs/utils.ipynb
 db.todos = db.create(Todo) 

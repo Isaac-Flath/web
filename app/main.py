@@ -5,31 +5,31 @@
 # %% auto 0
 __all__ = ['app', 'rt', 'redir_path', 'skip', 'client', 'oauth', 'index', 'theme', 'Auth', 'login', 'logout']
 
-# %% ../nbs/main.ipynb 2
+# %% ../nbs/main.ipynb
 from fasthtml.common import *
 from monsterui.all import *
 from fasthtml.oauth import *
 from functools import partial
 
-# %% ../nbs/main.ipynb 3
+# %% ../nbs/main.ipynb
 from social_media import ar as ar_social
 from todo import ar as ar_todo
 from blog import ar as ar_blog
 from utils import *
 
-# %% ../nbs/main.ipynb 4
+# %% ../nbs/main.ipynb
 app, rt = fast_app(hdrs = Theme.blue.headers(highlightjs=True), 
                    routes = (Mount('/blog/static', StaticFiles(directory='posts/static')),),
                    body_wrap=layout, live=True)
 
-# %% ../nbs/main.ipynb 5
+# %% ../nbs/main.ipynb
 @rt
 def index(): 
     return DivCentered(
         PicSumImg(cls='rounded-full w-96 h-96 object-cover mb-6'),
         H1("Isaac Flath"))
 
-# %% ../nbs/main.ipynb 6
+# %% ../nbs/main.ipynb
 @rt
 def index():
     _href = partial(A, cls=AT.primary, target='_blank')
@@ -93,18 +93,18 @@ def index():
         
     )
 
-# %% ../nbs/main.ipynb 7
+# %% ../nbs/main.ipynb
 @rt
 def theme():
     from fasthtml.components import Uk_theme_switcher
     return Uk_theme_switcher()
 
-# %% ../nbs/main.ipynb 8
+# %% ../nbs/main.ipynb
 ar_social.to_app(app)
 ar_todo.to_app(app)
 ar_blog.to_app(app)
 
-# %% ../nbs/main.ipynb 9
+# %% ../nbs/main.ipynb
 redir_path = '/redirect'
 skip = ('/login', '/blog', '/blog/', r'/blog/.*', '/', 
         redir_path, r'/.*\.(png|jpg|ico|css|js)', )
@@ -131,5 +131,5 @@ def logout(sess):
     del sess["user_name"]
     return oauth.logout(sess)
 
-# %% ../nbs/main.ipynb 12
+# %% ../nbs/main.ipynb
 serve(port=5005)
