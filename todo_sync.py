@@ -15,7 +15,7 @@ def get_issue_node_id(owner: str, repo: str, issue_number: int, token: Optional[
         }
       }
     }
-    '''
+    ''' 
     data = requests.post('https://api.github.com/graphql',
         json={'query': query, 'variables': {'owner': owner, 'repo': repo, 'number': issue_number}},
         headers={'Authorization': f'Bearer {token}'}).json()
