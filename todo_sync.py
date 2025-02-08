@@ -26,7 +26,7 @@ def get_issue_node_id(owner: str, repo: str, issue_number: int, token: Optional[
         return None
 
 def get_status_field(project_id: str, token: Optional[str] = None) -> Dict:
-    if not token: token = os.environ['GITHUB_TOKEN']
+    if not token: token = os.environ['GH_TOKEN']
     query = '''
     query($projectId: ID!) {
       node(id: $projectId) {
@@ -54,7 +54,7 @@ def get_status_field(project_id: str, token: Optional[str] = None) -> Dict:
     return next((f for f in fields if f.get('options') is not None), None)
 
 def get_project_items(project_id: str, token: Optional[str] = None) -> Dict:
-    if not token: token = os.environ['GITHUB_TOKEN']
+    if not token: token = os.environ['GH_TOKEN']
     query = '''
     query($projectId: ID!) {
       node(id: $projectId) {
@@ -82,7 +82,7 @@ def get_project_items(project_id: str, token: Optional[str] = None) -> Dict:
         return {}
 
 def add_issue_to_project(project_id: str, issue_node_id: str, token: Optional[str] = None) -> Optional[str]:
-    if not token: token = os.environ['GITHUB_TOKEN']
+    if not token: token = os.environ['GH_TOKEN']
     mutation = '''
     mutation($projectId: ID!, $contentId: ID!) {
       addProjectV2ItemById(input: {
@@ -104,7 +104,7 @@ def add_issue_to_project(project_id: str, issue_node_id: str, token: Optional[st
     return data['data']['addProjectV2ItemById']['item']['id']
 
 def add_todos_to_project(project_id: str, n_days: int = 30, token: Optional[str] = None) -> List[Dict]:
-    if not token: token = os.environ['GITHUB_TOKEN']
+    if not token: token = os.environ['GH_TOKEN']
     existing_items = get_project_items(project_id, token)
     
     # Get authenticated user
