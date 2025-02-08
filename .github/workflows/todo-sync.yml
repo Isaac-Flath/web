@@ -23,5 +23,5 @@ jobs:
           
       - name: Run sync script
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}
         run: python todo_sync.py
