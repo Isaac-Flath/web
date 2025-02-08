@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 
 def get_issue_node_id(owner: str, repo: str, issue_number: int, token: Optional[str] = None) -> Optional[str]:
-    if not token: token = os.environ['GITHUB_TOKEN']
+    if not token: token = os.environ['GH_TOKEN']
     query = '''
     query($owner: String!, $repo: String!, $number: Int!) {
       repository(owner: $owner, name: $repo) {
