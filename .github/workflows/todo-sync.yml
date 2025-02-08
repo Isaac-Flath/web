@@ -1,8 +1,13 @@
 name: Sync Todo List
 
 on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'todo_sync.py'
+      - 'app/todo/**'
   schedule:
-    - cron: '0 */2 * * *'  # Run every 2 hours
+    - cron: '0 * * * *'  # Run every 2 hours
   workflow_dispatch:  # Allow manual triggering
 
 jobs:
