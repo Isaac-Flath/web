@@ -6,7 +6,7 @@
 __all__ = ['ar', 'idx', 'emojis', 'FooterIcon', 'PostControls', 'PostTextArea', 'mv_post_down', 'mv_post_up', 'autosize_textarea',
            'EmojiButton', 'EmojiPicker', 'insert_emoji', 'UploadZone', 'upload_image', 'save_post_content',
            'save_post_image', 'rm_image', 'TwitterPost', 'rm_thread', 'load_thread', 'mk_thread', 'mk_thread_list',
-           'index']
+           'index', 'share_thread', 'download_thread']
 
 # %% ../nbs/social_media.ipynb
 from fasthtml.common import *
@@ -16,6 +16,9 @@ from fastlite.core import *
 from base64 import b64encode
 from fractionalindex.fractionalindex import SqliteIndex
 from utils import *
+from zipfile import ZipFile
+from io import BytesIO
+import shutil
 
 # %% ../nbs/social_media.ipynb
 ar = APIRouter(prefix='/social_media', body_wrap=layout)
@@ -196,16 +199,25 @@ def load_thread(tid:str, user_name:str):
     posts = list(post_tbl.rows_where('tid=?',(tid,), order_by='position'))
     thread_name = db.fetchone('select name from threads where id=?', (tid,))
 
-    return Div(DivFullySpaced(H3(thread_name),Button("Delete", cls=ButtonT.danger, hx_delete=rm_thread, hx_target='#post-list', hx_swap='outerHTML', hx_vals={'tid':tid}, hx_confirm='Are you sure?  The thread and all posts will be deleted')),
-            *(TwitterPost(
-        tid=p['tid'],
-        pid=p['id'],
-        txt=p['content'],
-        img=p['img_path'],
-        username=p['username'],
-        handle=p['handle'],
-        time=p['created_at']
-    ) for p in posts), id='post-list', cls='space-y-5 max-w-[598px]'), mk_thread_list(user_name, tid)
+    return Div(
+        DivFullySpaced(
+            H3(thread_name),
+            DivRAligned(
+                Button("Delete", cls=ButtonT.destructive, hx_delete=rm_thread, 
+                       hx_target='#post-list', hx_swap='outerHTML', 
+                       hx_vals={'tid':tid}, 
+                       hx_confirm='Are you sure?  The thread and all posts will be deleted'),
+                A("Download", href=download_thread.to(tid=tid), target='_blank', cls='uk-btn'+ButtonT.secondary),
+                A("Share", href=share_thread.to(tid=tid), target='_blank', cls='uk-btn'+ButtonT.secondary),
+            
+            
+            )),
+            DivCentered(
+                *(TwitterPost(
+                tid=p['tid'], pid=p['id'], txt=p['content'], img=p['img_path'],
+                username=p['username'], handle=p['handle'],time=p['created_at']) for p in posts), 
+            id='post-list', cls='space-y-5 max-w-[598px]'), 
+        mk_thread_list(user_name, tid))
 
 # %% ../nbs/social_media.ipynb
 @ar
@@ -235,3 +247,70 @@ def index(sess):
                     hx_get=mk_thread, hx_target='#post-list', hx_swap='outerHTML'),
                 Div(mk_thread_list(sess['user_name']), id='thread-list')),
             Div(id='post-list', cls='space-y-3 max-w-[598px]'),))
+
+# %% ../nbs/social_media.ipynb
+@ar
+def share_thread(tid:str):
+    "Show thread in Twitter-like format for sharing"
+    posts = db.execute('''
+        select p.content, p.img_path, p.username, p.handle, p.created_at, t.name
+        from posts p
+        left join threads t on p.tid=t.id
+        where p.tid=? 
+        order by position
+    ''', [tid]).fetchall()
+    
+    return Container(
+        H2(posts[0][5], cls='mb-5'),  # Thread name
+        DivCentered(*(
+            Card(
+                DivLAligned(
+                    Span(p[2] or "User", cls=TextT.bold),
+                    *map(lambda x: Span(x,cls=TextPresets.muted_sm), (p[3] or "@user", p[4] or "Just now"))),
+                P(p[0] or '', cls='my-3'),
+                Div(Img(src=p[1], cls='rounded-lg max-w-[512px]') if p[1] else None),
+                DivFullySpaced(
+                    *[FooterIcon(i,v) for i,v in (('chat','0'), ('repeat', randint(5, 100)), ('heart', randint(100, 900)))],
+                    UkIcon('share'),
+                    cls=TextT.muted),
+                cls='shadow-none')
+            for p in posts
+        ), cls='space-y-5 max-w-[598px]')
+    )
+
+# %% ../nbs/social_media.ipynb
+@ar
+def download_thread(tid:str):
+    "Download thread content and images as zip"
+    posts = db.execute('''
+        select content, img_path
+        from posts 
+        where tid=? 
+        order by position
+    ''', [tid]).fetchall()
+    
+    # Create zip file in memory
+    zip_buffer = BytesIO()
+    with ZipFile(zip_buffer, 'w') as zf:
+        # Add thread text
+        thread_text = []
+        for i,(txt,img) in enumerate(posts, 1):
+            thread_text.append(f"## {i} / {len(posts)}\n")
+            thread_text.append(txt or '')
+            if img:
+                thread_text.append(f"Image: {i}{Path(img).suffix}")
+                # Copy image with new name
+                img_path = Path(img.lstrip('/'))
+                if img_path.exists():
+                    zf.write(img_path, f"{i}{img_path.suffix}")
+        
+        # Add thread text file
+        zf.writestr('thread.txt', '\n\n'.join(thread_text))
+    
+    # Return zip file
+    zip_buffer.seek(0)
+    return Response(
+        content=zip_buffer.getvalue(),
+        media_type='application/zip',
+        headers={'Content-Disposition': f'attachment; filename="thread.zip"'}
+    )

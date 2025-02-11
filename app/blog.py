@@ -117,11 +117,11 @@ def blog_card(meta):
     return Card(
         DivLAligned(
             A(Img(src=meta.get('image',''), style="width:200px"), href=blog_post.to(fpath=meta['fpath'])),
-            Div(cls='space-y-3 uk-width-expand')(
+            Div(cls='space-y-3 w-full')(
                 H4(meta['title']),
                 P(meta['description']),
-                DivFullySpaced(map(Small, [meta['author'], meta['date']]), cls=TextT.muted),
+                DivFullySpaced(map(Small, [meta['author'], meta['date']]), cls=TextT.meta),
                 DivFullySpaced(
                     Tags(meta['categories']),
-                    A("Read", cls=('uk-button', ButtonT.primary,'h-6'), href=blog_post.to(fpath=meta['fpath']))))),
+                    A("Read", cls=('uk-btn', ButtonT.primary,'h-6'), href=blog_post.to(fpath=meta['fpath']))))),
         cls=CardT.hover)

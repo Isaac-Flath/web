@@ -13,7 +13,6 @@ from functools import partial
 
 # %% ../nbs/main.ipynb
 from social_media import ar as ar_social
-from todo import ar as ar_todo
 from blog import ar as ar_blog
 from utils import *
 
@@ -88,20 +87,16 @@ def index():
         DivLAligned(H4("Moving Up :"),P("Business process engineering ➢ product management")),
         DivLAligned(H4("Starting Technical Journey:"),P("Data analyst ➢ dynamics CRM developer")),
         DivLAligned(H4("Trying New Things:"),P("Accounting ➢ call center ➢ full-time ballroom dance teacher")),
-        DivLAligned(H4("Finding my home ❤️:"),P("Product owner ➢ machine learning researcher ➢ data science ➢ AI and tech generalist"))),
-
-        
-    )
+        DivLAligned(H4("Finding my home ❤️:"),P("Product owner ➢ machine learning researcher ➢ data science ➢ AI and tech generalist"))))
 
 # %% ../nbs/main.ipynb
 @rt
 def theme():
-    from fasthtml.components import Uk_theme_switcher
-    return Uk_theme_switcher()
+    return ThemePicker()
 
 # %% ../nbs/main.ipynb
 ar_social.to_app(app)
-ar_todo.to_app(app)
+# ar_todo.to_app(app)
 ar_blog.to_app(app)
 
 # %% ../nbs/main.ipynb
