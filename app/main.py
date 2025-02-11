@@ -101,7 +101,7 @@ ar_blog.to_app(app)
 
 # %% ../nbs/main.ipynb
 redir_path = '/redirect'
-skip = ('/login', '/blog', '/blog/', r'/blog/.*', '/', 
+skip = ('/login', '/blog', '/blog/', r'/blog/.*', '/','social_media/share_thread','social_media/share_thread*', 
         redir_path, r'/.*\.(png|jpg|ico|css|js)', )
 
 class Auth(OAuth):
