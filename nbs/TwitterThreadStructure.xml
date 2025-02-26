@@ -1,0 +1,86 @@
+<technical_twitter_structure>
+	<act>
+		<name>The Hook</name>
+		<number>1</number>
+		<plot_point>
+			<title>Attention Grabber</title>
+			<number>1</number>
+			<header>First Tweet Must Stop the Scroll</header>
+			<context>This is your first tweet that must quickly grab attention in a crowded feed. Keep it under 280 characters and make it impossible to ignore.</context>
+			<question>What problem or pain point does my audience immediately recognize?</question>
+			<question>What surprising claim or statistic will make them stop scrolling?</question>
+		</plot_point>
+		<plot_point>
+			<title>Value Promise</title>
+			<number>2</number>
+			<header>Establish Clear Benefits</header>
+			<context>Establish what the reader will gain by reading the entire thread. Be specific about the value they'll receive for their time investment.</context>
+			<question>What specific knowledge or insight will the reader walk away with?</question>
+			<question>How can I quantify the benefit (e.g., "3 techniques to...")?</question>
+		</plot_point>
+	</act>
+	<act>
+		<name>The Content</name>
+		<number>2</number>
+		<plot_point>
+			<title>Establish Credibility</title>
+			<number>3</number>
+			<header>Why Should They Listen to You</header>
+			<context>Quickly establish why you're qualified to share this information. This builds trust with technical audiences who are naturally skeptical.</context>
+			<question>What relevant experience can I briefly mention?</question>
+			<question>What results have I achieved using this knowledge?</question>
+		</plot_point>
+		<plot_point>
+			<title>Core Concept Introduction</title>
+			<number>4</number>
+			<header>Explain the Main Idea</header>
+			<context>Present the central technical idea in clear, accessible terms. Avoid unnecessary jargon and focus on intuitive understanding.</context>
+			<question>How can I explain this concept in one tweet without jargon?</question>
+			<question>What analogy or mental model makes this concept intuitive?</question>
+		</plot_point>
+		<plot_point>
+			<title>Evidence/Demonstration</title>
+			<number>5</number>
+			<header>Show Proof It Works</header>
+			<context>Provide proof that your approach works. Technical audiences need evidence, not just claims.</context>
+			<question>What code snippet, benchmark, or example best demonstrates this?</question>
+			<question>What measurable results can I share?</question>
+		</plot_point>
+		<plot_point>
+			<title>Anticipate Objections</title>
+			<number>6</number>
+			<header>Address Counterarguments</header>
+			<context>Address the most likely counterarguments before readers raise them. This demonstrates thoroughness and intellectual honesty.</context>
+			<question>What limitations or edge cases should I acknowledge?</question>
+			<question>How can I show I've considered alternative approaches?</question>
+		</plot_point>
+	</act>
+	<act>
+		<name>The Payoff</name>
+		<number>3</number>
+		<plot_point>
+			<title>Practical Application</title>
+			<number>7</number>
+			<header>How To Apply This Knowledge</header>
+			<context>Show readers exactly how to apply this knowledge. Make it actionable with concrete steps they can follow.</context>
+			<question>What are the specific implementation steps?</question>
+			<question>What common pitfalls should readers avoid?</question>
+		</plot_point>
+		<plot_point>
+			<title>Call to Action</title>
+			<number>8</number>
+			<header>Direct Next Steps</header>
+			<context>Direct the reader to a next step that deepens engagement. Provide a clear path forward beyond just reading the thread.</context>
+			<question>What specific action should readers take next?</question>
+			<question>What additional resource can I offer (e.g., GitHub repo, blog post)?</question>
+		</plot_point>
+		<plot_point>
+			<title>Engagement Hook</title>
+			<number>9</number>
+			<header>Encourage Conversation</header>
+			<context>End with an invitation for discussion that encourages replies. The algorithm rewards posts that generate conversation.</context>
+			<question>What thought-provoking question can I ask my audience?</question>
+			<question>What experience of theirs would add value to the conversation?</question>
+		</plot_point>
+	</act>
+</technical_twitter_structure>
